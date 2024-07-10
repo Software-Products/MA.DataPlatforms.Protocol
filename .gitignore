@@ -1,0 +1,18 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+# Shared resources
+/MAT.OCS.SharedResources
+
+# Generated code
+gen/
+
+# Nuget
+NuGet.exe
+pack.cmd
+/.vs
+/Build/.vs/Build
+/Build/.vs
+pack.cmd
+/.vs/MA.DataPlatforms.Protocol
