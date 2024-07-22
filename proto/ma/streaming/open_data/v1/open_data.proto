@@ -101,6 +101,8 @@ message EventDefinition {
   repeated DataType data_types = 8;
   // List of format strings, applied to event values for display
   repeated string format_strings = 9;
+  // Text conversion rules to be applied to event values if applicable
+  repeated TextConversionDefinition conversions = 10;
 }
 
 // Native data type
@@ -137,7 +139,7 @@ message ParameterDefinition {
   string application_name = 3;
   // The parameter description
   string description = 4;
-  // List of group identifiers in which the event should appear
+  // List of group identifiers in which the parameter should appear
   repeated string groups = 5;
   // Units that this parameter is measured in
   string units = 6;
@@ -155,10 +157,14 @@ message ParameterDefinition {
   double warning_max_value = 12;
   // Frequencies at which samples of this parameter may be sent
   repeated double frequencies = 13;
+  // Whether row data samples may be sent for this parameter
+  bool includes_row_data = 14;
+  // Whether synchro data samples may be sent for this parameter
+  bool includes_synchro_data = 15;
   // Text conversion rule to be applied if applicable
-  TextConversionDefinition conversion = 14;
+  TextConversionDefinition conversion = 16;
   // Formula for calculating sample values if applicable
-  FormulaDefinition formula = 15;
+  FormulaDefinition formula = 17;
 }
 
 // A text conversion definition
@@ -267,6 +273,8 @@ message MarkerPacket {
   string description = 5;
   // Source
   string source = 6;
+  // Value of the marker if applicable
+  int64 value = 7;
 }
 
 // Desribes the parameters in this data packet
