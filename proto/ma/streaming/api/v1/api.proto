@@ -113,7 +113,7 @@ message GetParameterDataFormatIdRequest {
 // Response for a data format request
 message GetParameterDataFormatIdResponse {
 	// Data format identifier
-	string data_format = 1;
+	uint64 data_format_identifier = 1;
 }
 
 // Request for a data format ID for a given event
@@ -127,7 +127,7 @@ message GetEventDataFormatIdRequest {
 // Response for a data format request
 message GetEventDataFormatIdResponse {
 	// Data format identifier
-	string data_format = 1;
+	uint64 data_format_identifier = 1;
 }
 
 // Data format manager service
@@ -147,7 +147,7 @@ message GetParametersListRequest {
 	// Data source for which this format is used
 	string data_source = 1;
 	// Data format identifier
-	string data_format = 2;
+	uint64 data_format_identifier = 2;
 }
 
 // Response for a parameter list request
@@ -161,7 +161,7 @@ message GetEventRequest {
 	// Data source for which this format is used
 	string data_source = 1;
 	// Data format identifier
-	string data_format = 2;
+	uint64 data_format_identifier = 2;
 }
 
 // Response for an event request
@@ -251,25 +251,13 @@ message CloseConnectionResponse {
 
 // Read packets
 service PacketReaderService {
-	// Read the next available packet from the specified connection
-	rpc ReadNextPacket(ReadNextPacketRequest) returns (ReadNextPacketResponse);
 	// Continuously read all packets from the specified connection
 	rpc ReadPackets(ReadPacketsRequest) returns (stream ReadPacketsResponse);
 	// Continuously read all of the essential packets from this connection
 	rpc ReadEssentials(ReadEssentialsRequest) returns (stream ReadEssentialsResponse);
-	// Read the next available packet containing any of the specified parameters or events
-	// Only data packets will be returned (i.e. no config, metadata etc)
-	rpc ReadNextDataPacket(ReadNextDataPacketRequest) returns (ReadNextDataPacketResponse);
 	// Continuously read all data packets containing any of the specified parameters or events
+	// Only data packets will be returned (i.e. no config, metadata etc)
 	rpc ReadDataPackets(ReadDataPacketsRequest) returns (stream ReadDataPacketsResponse);
-}
-
-message ReadNextPacketRequest {
-	Connection connection = 1;
-}
-
-message ReadNextPacketResponse {
-	PacketResponse response = 1;
 }
 
 message ReadPacketsRequest {
@@ -286,14 +274,6 @@ message ReadEssentialsRequest {
 
 message ReadEssentialsResponse {
 	repeated PacketResponse response = 1;
-}
-
-message ReadNextDataPacketRequest {
-	DataPacketRequest request = 1;
-}
-
-message ReadNextDataPacketResponse {
-	PacketResponse response = 1;
 }
 
 message ReadDataPacketsRequest {
@@ -416,6 +396,14 @@ message GetSessionInfoResponse {
 	repeated string associate_session_keys = 5;	
 	// Shows whether the session is completed or not
 	bool is_complete = 6;
+	// Available streams
+	repeated string streams = 7;
+	// The offsets into each topic / partition (key is topic name, optionally appended with a ':' followed by the partition number)
+	map<string, int64> topic_partition_offsets = 8;
+	// Offset of the main data source topic
+	int64 main_offset = 9;
+	// Offset of the data source essentials topic
+	int64 essentials_offset = 10;
 }
 
 // Request for obtaining a session start notification
