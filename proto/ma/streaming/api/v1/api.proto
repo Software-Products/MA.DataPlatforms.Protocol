@@ -399,7 +399,7 @@ message GetSessionInfoResponse {
 	// Available streams
 	repeated string streams = 7;
 	// The offsets into each topic / partition (key is topic name, optionally appended with a ':' followed by the partition number)
-  map<string, int64> topic_partition_offsets = 8;
+	map<string, int64> topic_partition_offsets = 8;
 	// Offset of the main data source topic
 	int64 main_offset = 9;
 	// Offset of the data source essentials topic
