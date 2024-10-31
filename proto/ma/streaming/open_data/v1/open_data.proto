@@ -1,4 +1,6 @@
-// Copyright (c) 2024, McLaren Applied Ltd.
+// <copyright file="open_data.proto" company="McLaren Applied Ltd.">
+//
+// Copyright 2024 McLaren Applied Ltd
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,6 +13,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// </copyright>
 
 syntax = "proto3";
 
@@ -381,6 +384,13 @@ message SynchroDataPacket {
   repeated SampleColumn column = 4;
 }
 
+// CAN type
+enum CanType {
+  CAN_TYPE_UNSPECIFIED = 0;
+  CAN_TYPE_TRANSMIT = 1;
+  CAN_TYPE_RECEIVE = 2;
+}
+
 // Raw CAN message
 message RawCANDataPacket {
   // Timestamp of the packet
@@ -391,6 +401,8 @@ message RawCANDataPacket {
   uint32 can_id = 3;
   // Message payload
   bytes payload = 4;
+  // CAN RxTx
+  CanType type = 5;
 }
 
 // "Array" of values
@@ -448,3 +460,36 @@ message SystemStatusMessage {
   // TBD
 }
 
+// Error type
+enum ErrorType {
+  ERROR_TYPE_UNSPECIFIED = 0;
+  ERROR_TYPE_CURRENT = 1;
+  ERROR_TYPE_LOGGED = 2;
+}
+
+// Error Status 
+enum ErrorStatus {
+  ERROR_STATUS_UNSPECIFIED = 0;
+  ERROR_STATUS_SET = 1;
+  ERROR_STATUS_CLEARED = 2;
+}
+
+// Error Packet
+message ErrorPacket {
+  // Error Identifier
+  string error_identifier = 1;
+  // Time the error occurred
+  fixed64 timestamp = 2;
+  // The application containing the error
+  string application_name = 3;
+  // The error group
+  string group = 4;
+  // The error name
+  string name = 5;
+  // The error description
+  string description = 6;
+  // The error type
+  ErrorType type = 7;
+    // The error status
+  ErrorStatus status = 8;
+}

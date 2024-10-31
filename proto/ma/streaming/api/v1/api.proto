@@ -1,4 +1,6 @@
-// Copyright (c) 2024, McLaren Applied Ltd.
+// <copyright file="api.proto" company="McLaren Applied Ltd.">
+//
+// Copyright 2024 McLaren Applied Ltd
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,6 +13,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// </copyright>
 
 syntax = "proto3";
 
@@ -399,7 +402,7 @@ message GetSessionInfoResponse {
 	// Available streams
 	repeated string streams = 7;
 	// The offsets into each topic / partition (key is topic name, optionally appended with a ':' followed by the partition number)
-	map<string, int64> topic_partition_offsets = 8;
+    map<string, int64> topic_partition_offsets = 8;
 	// Offset of the main data source topic
 	int64 main_offset = 9;
 	// Offset of the data source essentials topic
