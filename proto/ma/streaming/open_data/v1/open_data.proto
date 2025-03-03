@@ -18,6 +18,7 @@
 syntax = "proto3";
 
 import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
 
 package ma.streaming.open_data.v1;
 
@@ -34,6 +35,8 @@ message Packet {
   bool is_essential = 3;
   // Content
   bytes content = 4;
+  // Id (optional if needed by default is 0)
+  uint64 id = 5;
 }
 
 // New session has started
@@ -42,6 +45,8 @@ message NewSessionPacket {
   string data_source = 1;
   // The offsets into each topic / partition (key is topic name, optionally appended with a ':' followed by the partition number)
   map<string, int64> topic_partition_offsets = 2;
+  // Difference between UTC time and local standard time in the timezone in which the data is recorded (negative for negative longitudes, positive for positive longitudes)
+  google.protobuf.Duration utc_offset = 3;
 }
 
 // A session has ended
@@ -63,7 +68,9 @@ message SessionInfoPacket {
   // Version
   uint32 version = 4;
   // Associate session keys
-  repeated string associate_session_keys = 5;  
+  repeated string associate_session_keys = 5;
+  // Session details (detail name, detail value)
+  map<string, string> details = 6;
 }
 
 // General metadata
@@ -106,6 +113,8 @@ message EventDefinition {
   repeated string format_strings = 9;
   // Text conversion rules to be applied to event values if applicable
   repeated TextConversionDefinition conversions = 10;
+  // List of units applied to event values for display
+  repeated string units = 11;
 }
 
 // Native data type
@@ -193,7 +202,8 @@ message FormulaDefinition {
 // Types of formula. Can be extended to support other languages in the future
 enum FormulaType {
   FORMULA_TYPE_UNSPECIFIED = 0; // Unspecified
-  FORMULA_TYPE_FDL = 1; // Mclaren Applied proprietary FDL, used for virtual parameters
+  FORMULA_TYPE_FDL = 1; // Mclaren Applied proprietary FDL, used for virtual parameters with System Monitor
+  FORMULA_TYPE_CSHARP = 2; // An open format translated from FDL to C#
 }
 
 // Defines the group

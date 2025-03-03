@@ -18,6 +18,8 @@
 syntax = "proto3";
 
 import "ma/streaming/open_data/v1/open_data.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
 
 package ma.streaming.api.v1;
 
@@ -199,8 +201,8 @@ message Connection {
 message ConnectionDetails {
 	// Data source to read from
 	string data_source = 1;
-	// Session to read (can be ommitted if sessions are not being used)
-	string session = 2;
+	// Session key of the session to read (can be ommitted if sessions are not being used)
+	string session_key = 2;
 	// Streams to read (can be ommitted if all streams are required)
 	repeated string streams = 3;
 	// Offset from which to start for each stream
@@ -210,6 +212,8 @@ message ConnectionDetails {
 	int64 main_offset = 5;
 	// Offset from which to start for the data source essentials topic
 	int64 essentials_offset = 6;
+	// to specify exclusion of the main stream from reading
+	bool exclude_main_stream = 7;
 }
 
 // Request for a new (read) connection
@@ -309,6 +313,8 @@ message PacketResponse {
 	ma.streaming.open_data.v1.Packet packet = 1;
 	// The stream the packet was read from
 	string stream = 2;
+	// the time that packet submit in the broker topic partition
+	google.protobuf.Timestamp submit_time = 3;
 }
 
 //////////////////////////////////////////
@@ -333,6 +339,8 @@ service SessionManagementService {
 	rpc UpdateSessionIdentifier(UpdateSessionIdentifierRequest) returns (UpdateSessionIdentifierResponse);
 	// Add associate session to a session given its unique session key
 	rpc AddAssociateSession(AddAssociateSessionRequest) returns (AddAssociateSessionResponse);
+	// Update the session details for a session given its unique session key
+	rpc UpdateSessionDetails(UpdateSessionDetailsRequest) returns (UpdateSessionDetailsResponse);
 }
 
 // Request for the creation of a new session
@@ -343,6 +351,8 @@ message CreateSessionRequest {
 	string type = 2;
 	// Version (defaults to 1)
 	uint32 version = 3;
+	// Difference between UTC time and local standard time in the timezone in which the data is recorded (negative for negative longitudes, positive for positive longitudes, defaults to 0)
+	google.protobuf.Duration utc_offset = 4;
 }
 
 // Response to a session creation request
@@ -407,7 +417,11 @@ message GetSessionInfoResponse {
 	int64 main_offset = 9;
 	// Offset of the data source essentials topic
 	int64 essentials_offset = 10;
-}
+	// Session details (detail name, detail value)
+	map<string, string> details = 11;
+	// Difference between UTC time and local standard time in the timezone in which the data is recorded (negative for negative longitudes, positive for positive longitudes)
+	google.protobuf.Duration utc_offset = 12;
+  }
 
 // Request for obtaining a session start notification
 message GetSessionStartNotificationRequest {
@@ -458,5 +472,17 @@ message AddAssociateSessionRequest {
 
 message AddAssociateSessionResponse {
 	// Whether the add associate session request succeeded
+	bool success = 1;
+}
+
+message UpdateSessionDetailsRequest {
+	// Unique session key
+	string session_key = 1;
+	// Session details to update (detail name, detail value)
+	map<string, string> details = 2;
+}
+
+message UpdateSessionDetailsResponse {
+	// Whether the update session details request succeeded
 	bool success = 1;
 }
