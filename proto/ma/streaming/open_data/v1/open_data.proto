@@ -47,7 +47,9 @@ message NewSessionPacket {
   map<string, int64> topic_partition_offsets = 2;
   // Difference between UTC time and local standard time in the timezone in which the data is recorded (negative for negative longitudes, positive for positive longitudes)
   google.protobuf.Duration utc_offset = 3;
-}
+  // Session info
+  optional SessionInfoPacket session_info = 4; 
+  }
 
 // A session has ended
 message EndOfSessionPacket {
@@ -55,6 +57,14 @@ message EndOfSessionPacket {
   string data_source = 1;
   // The offsets into each topic / partition (key is topic name, optionally appended with a ':' followed by the partition number)
   map<string, int64> topic_partition_offsets = 2;
+}
+
+// Coverage cursor position for a session has been updated
+message CoverageCursorInfoPacket {
+  // Data Source name
+  string data_source = 1;
+	// Coverage cursor time (nanoseconds since the UNIX epoch of 1st January 1970, UTC)
+	fixed64 coverage_cursor_time = 2;
 }
 
 // Session info
