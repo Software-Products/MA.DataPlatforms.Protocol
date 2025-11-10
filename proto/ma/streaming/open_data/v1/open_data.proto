@@ -1,6 +1,6 @@
-// <copyright file="open_data.proto" company="McLaren Applied Ltd.">
+// <copyright file="open_data.proto" company="Motion Applied Ltd.">
 //
-// Copyright 2024 McLaren Applied Ltd
+// Copyright 2025 Motion Applied Ltd
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -63,8 +63,8 @@ message EndOfSessionPacket {
 message CoverageCursorInfoPacket {
   // Data Source name
   string data_source = 1;
-	// Coverage cursor time (nanoseconds since the UNIX epoch of 1st January 1970, UTC)
-	fixed64 coverage_cursor_time = 2;
+  // Coverage cursor time (nanoseconds since the UNIX epoch of 1st January 1970, UTC)
+  fixed64 coverage_cursor_time = 2;
 }
 
 // Session info
