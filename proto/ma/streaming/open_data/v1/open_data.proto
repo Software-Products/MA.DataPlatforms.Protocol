@@ -99,6 +99,12 @@ message ConfigurationPacket {
   repeated EventDefinition event_definitions = 3;
   // The group definitions
   repeated GroupDefinition group_definitions = 4;
+  // Flag to indicate if this packet is part of a larger config.
+  bool partial_packet = 5;
+  // The packet number out of the total packets sent if partial packet was set to true.
+  uint32 packet_number = 6;
+  // The total packet number that make up the config id if partial packet was set to true.
+  uint32 total_packet_number = 7;
 }
 
 // Defines the metadata for a given event
