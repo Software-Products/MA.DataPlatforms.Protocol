@@ -359,6 +359,8 @@ message CreateSessionRequest {
 	repeated string associate_session_key = 6;
 	// Session details to update (detail name, detail value)
 	map<string, string> details = 7;
+	// Session Creation Time (if not provided, the server time will be used)
+	google.protobuf.Timestamp creation_time = 8;
 }
 
 // Response to a session creation request
@@ -377,6 +379,8 @@ message EndSessionRequest {
 	string data_source = 1;
 	// Unique session key
 	string session_key = 2;
+	// Session Termination Time (if not provided, the server time will be used)
+	google.protobuf.Timestamp termination_time = 3;
 }
 
 // Response to the termination of a session
@@ -435,7 +439,11 @@ message GetSessionInfoResponse {
 	google.protobuf.Duration utc_offset = 12;
 	// Whether the get session info request succeeded
 	bool success = 13;
-  }
+	// Session Creation Time
+	google.protobuf.Timestamp creation_time = 14;
+	// Session Termination Time (Not valid when session is not complete)
+	google.protobuf.Timestamp termination_time = 15;
+}
 
 // Request for obtaining a session start notification
 message GetSessionStartNotificationRequest {

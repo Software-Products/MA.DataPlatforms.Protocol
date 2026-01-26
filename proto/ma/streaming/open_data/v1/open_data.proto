@@ -19,6 +19,7 @@ syntax = "proto3";
 
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
 
 package ma.streaming.open_data.v1;
 
@@ -49,6 +50,8 @@ message NewSessionPacket {
   google.protobuf.Duration utc_offset = 3;
   // Session info
   optional SessionInfoPacket session_info = 4; 
+  // Session Creation Time
+  google.protobuf.Timestamp creation_time = 5;
   }
 
 // A session has ended
@@ -57,6 +60,8 @@ message EndOfSessionPacket {
   string data_source = 1;
   // The offsets into each topic / partition (key is topic name, optionally appended with a ':' followed by the partition number)
   map<string, int64> topic_partition_offsets = 2;
+  // Session Termination Time
+  google.protobuf.Timestamp termination_time = 3;
 }
 
 // Coverage cursor position for a session has been updated
@@ -81,6 +86,12 @@ message SessionInfoPacket {
   repeated string associate_session_keys = 5;
   // Session details (detail name, detail value)
   map<string, string> details = 6;
+  // Difference between UTC time and local standard time in the timezone in which the data is recorded (negative for negative longitudes, positive for positive longitudes)
+  google.protobuf.Duration utc_offset = 7;
+  // Session Creation Time
+  google.protobuf.Timestamp creation_time = 8;
+  // Session Termination Time
+  google.protobuf.Timestamp termination_time = 9;
 }
 
 // General metadata
@@ -407,7 +418,7 @@ message SynchroDataPacket {
   repeated uint32 intervals = 3;
   // The rest of the Data
   // Each column must have number of values = number of intervals + 1
-  repeated SampleColumn column = 4;
+  repeated SampleColumn columns = 4;
 }
 
 // CAN type
@@ -518,4 +529,28 @@ message ErrorPacket {
   ErrorType type = 7;
     // The error status
   ErrorStatus status = 8;
+}
+
+// Indicates that a stream has started
+message StreamStartedPacket{
+    // Data Source
+    string data_source = 1;
+    // Session Key
+    string session_key = 2;
+    // Stream Name
+    string stream_name = 3;
+    // Start Time
+    google.protobuf.Timestamp start_time = 4;
+}
+
+// Indicates that a stream has stopped
+message StreamStoppedPacket{
+    // Data Source
+    string data_source = 1;
+    // Session Key
+    string session_key = 2;
+    // Stream Name
+    string stream_name = 3;
+    // Stop Time
+    google.protobuf.Timestamp stop_time = 4;
 }
