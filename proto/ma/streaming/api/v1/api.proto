@@ -214,6 +214,8 @@ message ConnectionDetails {
 	int64 essentials_offset = 6;
 	// to specify exclusion of the main stream from reading
 	bool exclude_main_stream = 7;
+	// Consumer group to use for this connection
+	string consumer_group = 8;
 }
 
 // Request for a new (read) connection
